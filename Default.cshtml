@@ -1,8 +1,25 @@
 ﻿@{
-    Page.Title = "Title goes here";
-    Layout = "_Layout.cshtml";
+  Page.Title = "Title goes here";
+  Layout = "_Layout.cshtml";
+  
+  // Test Query
+  const string queryString = "SELECT * FROM Asdf";
 }
 
 <div>
-    
+
+  @*Test Query Values*@
+  <table>
+    <tbody>
+    @foreach (var row in App.Db.Query(queryString))
+    {
+      <tr>
+        <td>@row.Id</td>
+        <td>@row.name</td>
+      </tr>
+    }
+    </tbody>
+  </table>
+  @*Test Query Values*@
+
 </div>
