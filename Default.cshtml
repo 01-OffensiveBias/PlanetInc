@@ -1,6 +1,9 @@
 ﻿@{
   Page.Title = "Title goes here";
   Layout = "_Layout.cshtml";
+
+  // Open Database Connection
+  Database db = Database.Open("IISServer");
   
   // Test Query
   const string queryString = "SELECT * FROM Asdf";
@@ -11,7 +14,7 @@
   @*Test Query Values*@
   <table>
     <tbody>
-    @foreach (var row in App.Db.Query(queryString))
+    @foreach (var row in db.Query(queryString))
     {
       <tr>
         <td>@row.Id</td>
@@ -23,3 +26,9 @@
   @*Test Query Values*@
 
 </div>
+
+@{
+  // Close Database Connection
+  // Is this necessary?
+  db.Close();
+}
