@@ -3,7 +3,7 @@
   Layout = "_Layout.cshtml";
 
   // Open Database Connection
-  Database db = Database.Open("IISServer");
+  Database db = Database.Open("PlanetInc");
   
   // Test Query
   const string queryString = "SELECT * FROM Asdf";
@@ -27,8 +27,20 @@
 
 </div>
 
+<form method="POST">
+  <h3>Login</h3>
+  <fieldset>
+    <label for="email">Email: </label>
+    <input id="email" name="username" type="email" required/>
+
+    <label for="password">Password: </label>
+    <input id="password" name="password" type="password" required/>
+
+    <input id="submit" type="submit" value="Submit"/>
+  </fieldset>
+</form>
+
 @{
   // Close Database Connection
-  // Is this necessary?
   db.Close();
 }
