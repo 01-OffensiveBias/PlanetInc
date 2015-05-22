@@ -1,0 +1,39 @@
+﻿@{
+  Page.Title = "Title goes here";
+  Layout = "_Layout.cshtml";
+
+   
+  // Test Query
+//    string queryString = "SELECT * FROM Asdf WHERE name LIKE '%" + Request.QueryString["search"] + "%';";
+//    var db = Database.Open("IISServer");
+//    var data = db.Query(queryString);
+
+    string query = "SELECT * FROM Asdf";
+    App.Db.Query(query);
+
+  if (!Request.QueryString["search"].IsEmpty())
+    {
+        <p>@Request.QueryString["search"]</p>
+    }
+}
+
+<div>
+    <form action="Default.cshtml" method="GET">
+        <input type="text" name="search"/>
+         <input type="submit"/>
+    </form>
+  @*Test Query Values*@
+  <table>
+    <tbody>
+    @foreach (var row in data)
+    {
+      <tr>
+        <td>@row.Id</td>
+        <td>@row.name</td>
+      </tr>
+    }
+    </tbody>
+  </table>
+  @*Test Query Values*@
+
+</div>

@@ -1,0 +1,26 @@
+﻿@using System.Data
+@using System.Data.SqlClient
+@{
+    Page.Title = "Title goes here";
+    Layout = "_Layout.cshtml";
+
+    using (SqlConnection connection = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["IISServer"].ConnectionString))
+    {
+        connection.Open();
+        // Prepared statements
+        SqlCommand command = new SqlCommand(null, connection);
+
+        command.CommandText = "INSERT INTO Clients (Name) VALUES(@name);";
+        SqlParameter name = new SqlParameter(@"name", SqlDbType.VarChar, 50);
+        name.Value = "Nathan";
+        command.Parameters.Add(name);
+        
+        command.Prepare();
+        command.ExecuteNonQuery();
+
+        // Change parameter values and call ExecuteNonQuery.
+        /*command.Parameters[0].Value = 21;
+        command.Parameters[1].Value = "Second Region";
+        command.ExecuteNonQuery();*/
+    }
+}
