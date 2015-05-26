@@ -1,60 +1,6 @@
 ﻿@{
     Page.Title = "Title goes here";
     Layout = "_Layout.cshtml";
-
-    var db = Database.Open("IISServer");
-    string queryString = "SELECT * FROM Planets WHERE Name LIKE '%" + Request.QueryString["search"] + "%';";
-    var data = db.Query(queryString);
-
-    if (!Request.QueryString["search"].IsEmpty())
-    {
-        <p>Searched for "@Request.QueryString["search"]"</p>
-    }
-    else if (!Request.QueryString["newuser"].IsEmpty())
-    {
-        <p>Added new client "Nathan"</p>
-    }
 }
 
-<div>
-    <form action="Default.cshtml" method="GET">
-        <label for="newuser">Register User:</label>
-        <input type="text" name="newuser" id="newuser" />
-        <input type="submit" />
-    </form>
-</div>
-
-<div>
-    <form action="Default.cshtml" method="GET">
-        <label for="search">Search planets: </label>
-        <input type="text" name="search" id="search"/>
-        <input type="submit"/>
-    </form>
-
-    @*Test Query Values*@
-    <table>
-        <tbody>
-        <tr>
-            <th>UID</th>
-            <th>Class</th>
-            <th>Coordinates</th>
-            <th>Purpose</th>
-            <th>Name</th>
-        </tr>
-        </tbody>
-        <tbody>
-        @foreach (var row in data)
-        {
-            <tr>
-                <td>@row.Id</td>
-                <td>@row.Class</td>
-                <td>@row.Coordinates</td>
-                <td>@row.Purpose</td>
-                <td>@row.Name</td>
-            </tr>
-        }
-        </tbody>
-    </table>
-    @*Test Query Values*@
-
-</div>
+<a href="Reserve.cshtml">Reserve a planet here...</a>

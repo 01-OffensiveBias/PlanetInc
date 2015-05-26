@@ -6,12 +6,14 @@ using System.Web;
 /// <summary>
 /// Summary description for Class1
 /// </summary>
-public class Class1
+public class RegisterUser
 {
-	public Class1()
+    public Boolean isRegistered;
+
+    public RegisterUser(String name)
 	{
-		//
-		// TODO: Add constructor logic here
-		//
+		 
 	}
+
+
 }

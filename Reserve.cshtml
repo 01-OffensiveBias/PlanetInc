@@ -1,26 +1,35 @@
 ﻿@using System.Data
 @using System.Data.SqlClient
+
 @{
     Page.Title = "Title goes here";
     Layout = "_Layout.cshtml";
 
-    using (SqlConnection connection = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["IISServer"].ConnectionString))
-    {
-        connection.Open();
-        // Prepared statements
-        SqlCommand command = new SqlCommand(null, connection);
+    var db = Database.Open("IISServer");
+    string queryString = "SELECT r.Id, r.Terrain, r.Price, r.PlanetId, p.Name FROM Regions AS r JOIN Planets AS p ON r.PlanetId = p.Id";
+    var data = db.Query(queryString);
 
-        command.CommandText = "INSERT INTO Clients (Name) VALUES(@name);";
-        SqlParameter name = new SqlParameter(@"name", SqlDbType.VarChar, 50);
-        name.Value = "Nathan";
-        command.Parameters.Add(name);
-        
-        command.Prepare();
-        command.ExecuteNonQuery();
 
-        // Change parameter values and call ExecuteNonQuery.
-        /*command.Parameters[0].Value = 21;
-        command.Parameters[1].Value = "Second Region";
-        command.ExecuteNonQuery();*/
-    }
+//    Reservation newReservation = new Reservation();
+
+    int lastId = 0;
 }
+
+
+
+<form method="POST" action="Register.cshtml">
+    <input type="hidden" name="clientId" value="1"/>
+    <select>
+        @foreach (var row in data)
+        {
+            if (row.PlanetId != lastId)
+            {
+                lastId = row.PlanetId;
+                <optgroup label="@row.Name"></optgroup>
+            }
+            <option>&nbsp;Region @row.Id --- $@row.Price</option>
+        }
+    </select>
+    <input type="date" name="startDate" id="startDate"/>
+    <input type="date" name="endDate"/>
+</form>
