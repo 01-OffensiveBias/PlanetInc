@@ -7,29 +7,38 @@
 
     var db = Database.Open("IISServer");
     string queryString = "SELECT r.Id, r.Terrain, r.Price, r.PlanetId, p.Name FROM Regions AS r JOIN Planets AS p ON r.PlanetId = p.Id";
-    var data = db.Query(queryString);
+    var regions = db.Query(queryString);
 
-
-//    Reservation newReservation = new Reservation();
-
-    int lastId = 0;
+    if (!Request.Form.ToString().IsEmpty())
+    {
+       Reservation r= new Reservation(0, 
+            Convert.ToInt32(Request.Form["planetId"]), 
+            Convert.ToDateTime(Request.Form["startDate"]), 
+            Convert.ToDateTime(Request.Form["endDate"])
+        );
+        
+    }
+    
+    int lastPlanetId = 0;
 }
 
 
 
-<form method="POST" action="Register.cshtml">
-    <input type="hidden" name="clientId" value="1"/>
+<form method="POST" action="Reserve.cshtml" name="register">
+    <input type="hidden" name="planetId" value="1"/>
     <select>
-        @foreach (var row in data)
+        @foreach (var row in regions)
         {
-            if (row.PlanetId != lastId)
+            if (row.PlanetId != lastPlanetId)
             {
-                lastId = row.PlanetId;
+                lastPlanetId = row.PlanetId;
                 <optgroup label="@row.Name"></optgroup>
             }
-            <option>&nbsp;Region @row.Id --- $@row.Price</option>
+            <option>Region @row.Id --- $@row.Price</option>
         }
     </select>
     <input type="date" name="startDate" id="startDate"/>
     <input type="date" name="endDate"/>
+
+    <input type="submit" />
 </form>
