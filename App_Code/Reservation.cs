@@ -69,8 +69,8 @@ public class Reservation
         cmd.CommandText = "SELECT COUNT(*) " +
             "FROM Reservations " +
             "WHERE RegionId = @region AND (" +
-            "@start BETWEEN StartDate AND EndDate OR " +
-            "@end BETWEEN StartDate AND EndDate OR " +
+            "@start <= EndDate OR " +
+            "@end >= StartDate OR " +
             "@start = StartDate AND @end = EndDate);";
 
         SqlParameter regionParameter = new SqlParameter("@region", SqlDbType.Int);
@@ -86,6 +86,4 @@ public class Reservation
 
         return (int) cmd.ExecuteScalar() != 0;
     }
-
-
 }
