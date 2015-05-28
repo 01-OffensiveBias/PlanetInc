@@ -65,10 +65,10 @@ else
       Validation.AddFormError("Invalid Login Information");
     }
   }
-}
-else if (WebSecurity.IsAuthenticated)
-{
-  WebSecurity.Logout();
+  else if (WebSecurity.IsAuthenticated)
+  {
+    WebSecurity.Logout();
+  }
 }
 
 @WebSecurity.IsAuthenticated
