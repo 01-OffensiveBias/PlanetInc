@@ -64,7 +64,6 @@ public class Reservation
 
     private Boolean checkIfReserved()
     {
-        // TODO: this is bullshit
         SqlCommand cmd = new SqlCommand(null, connection);
 
         cmd.CommandText = "SELECT COUNT(*) " +
