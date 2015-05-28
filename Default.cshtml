@@ -1,13 +1,77 @@
-﻿@{
+﻿@using System.Data.SqlClient
+@{
   Page.Title = "Title goes here";
   Layout = "_Layout.cshtml";
 
   // Open Database Connection
   Database db = Database.Open("PlanetInc");
-  
-  // Test Query
-  const string queryString = "SELECT * FROM Asdf";
+
+  // Test Querys
+  const string queryString = "SELECT * FROM Clients";
+
+  // Server-Side Validation
+  Validation.RequireField("email", "You must enter your email");
+  Validation.RequireField("password", "You must enter your password");
 }
+
+@if (WebSecurity.IsAuthenticated)
+{
+  // Data for logged in user
+  <form method="POST">
+    <h3>Logout</h3>
+    <fieldset>
+      <input id="submit" name="logout" type="submit" value="Logout" />
+    </fieldset>
+  </form>
+}
+else
+{
+  <form method="POST">
+    <h3>Login</h3>
+    @Html.ValidationSummary()
+    <fieldset>
+      <label for="email">Email: </label>
+      <input id="email" name="username" type="email" value="@Request["username"]" required />
+
+      <label for="password">Password: </label>
+      <input id="password" name="password" type="password" value="@Request["password"]" required />
+
+      <input id="submit" type="submit" value="Submit" />
+    </fieldset>
+  </form>
+}
+
+@if (IsPost)
+{
+  if (Request.Form["logout"] == null)
+  {
+    string username = Request.Form["username"];
+    string password = Request.Form["password"];
+
+    if (WebSecurity.UserExists(username))
+    {
+      if (WebSecurity.Login(username, password, persistCookie: true))
+      {
+        // Alert the user of login success
+        Response.Redirect("/");
+      }
+      else
+      {
+        Validation.AddFormError("Invalid Login Information");
+      }
+    }
+    else
+    {
+      Validation.AddFormError("Invalid Login Information");
+    }
+  }
+}
+else if (WebSecurity.IsAuthenticated)
+{
+  WebSecurity.Logout();
+}
+
+@WebSecurity.IsAuthenticated
 
 <div>
 
@@ -26,19 +90,6 @@
   @*Test Query Values*@
 
 </div>
-
-<form method="POST">
-  <h3>Login</h3>
-  <fieldset>
-    <label for="email">Email: </label>
-    <input id="email" name="username" type="email" required/>
-
-    <label for="password">Password: </label>
-    <input id="password" name="password" type="password" required/>
-
-    <input id="submit" type="submit" value="Submit"/>
-  </fieldset>
-</form>
 
 @{
   // Close Database Connection
