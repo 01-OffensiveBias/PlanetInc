@@ -34,11 +34,32 @@ public class Reservation
         {
             reserve();
         }
+
+        connection.Close();
     }
 
     private void reserve()
     {
-        
+        SqlCommand cmd = new SqlCommand(null, connection);
+
+        cmd.CommandText = "INSERT INTO Reservations (ClientId, RegionId, StartDate, EndDate) " +
+            "VALUES (@client, @region, @start, @end);";
+
+        SqlParameter clientParameter = new SqlParameter("@client", SqlDbType.Int);
+        SqlParameter regionParameter = new SqlParameter("@region", SqlDbType.Int);
+        SqlParameter startParam = new SqlParameter("@start", SqlDbType.Date);
+        SqlParameter endParam = new SqlParameter("@end", SqlDbType.Date);
+        clientParameter.Value = clientId;
+        regionParameter.Value = regionId;
+        startParam.Value = startDate;
+        endParam.Value = endDate;
+
+        cmd.Parameters.Add(clientParameter);
+        cmd.Parameters.Add(regionParameter);
+        cmd.Parameters.Add(startParam);
+        cmd.Parameters.Add(endParam);
+
+        cmd.ExecuteNonQuery();
     }
 
     private Boolean checkIfReserved()
@@ -48,23 +69,23 @@ public class Reservation
 
         cmd.CommandText = "SELECT COUNT(*) " +
             "FROM Reservations " +
-            "WHERE '@start' BETWEEN StartDate AND EndDate OR " +
-            "'@end' BETWEEN StartDate AND EndDate OR " +
-            "'@start' = StartDate AND '@end' = EndDate;";
+            "WHERE RegionId = @region AND (" +
+            "@start BETWEEN StartDate AND EndDate OR " +
+            "@end BETWEEN StartDate AND EndDate OR " +
+            "@start = StartDate AND @end = EndDate);";
 
-        SqlParameter startParam = new SqlParameter("@start", SqlDbType.VarChar);
-        SqlParameter endParam = new SqlParameter("@end", SqlDbType.VarChar);
-        startParam.Value = startDate.ToShortDateString();
-        endParam.Value = endDate.ToShortDateString();
+        SqlParameter regionParameter = new SqlParameter("@region", SqlDbType.Int);
+        SqlParameter startParam = new SqlParameter("@start", SqlDbType.Date);
+        SqlParameter endParam = new SqlParameter("@end", SqlDbType.Date);
+        regionParameter.Value = regionId;
+        startParam.Value = startDate;
+        endParam.Value = endDate;
 
+        cmd.Parameters.Add(regionParameter);
         cmd.Parameters.Add(startParam);
         cmd.Parameters.Add(endParam);
 
-        isReserved = (int) cmd.ExecuteScalar() == 0;
-
-        connection.Close();
-
-        return isReserved;
+        return (int) cmd.ExecuteScalar() != 0;
     }
 
 

@@ -11,22 +11,28 @@
 
     if (!Request.Form.ToString().IsEmpty())
     {
-       Reservation r= new Reservation(0, 
-            Convert.ToInt32(Request.Form["planetId"]), 
-            Convert.ToDateTime(Request.Form["startDate"]), 
-            Convert.ToDateTime(Request.Form["endDate"])
-        );
-        
+        Reservation r= new Reservation(1,
+             Convert.ToInt32(Request.Form["regionId"]),
+             Convert.ToDateTime(Request.Form["startDate"]),
+             Convert.ToDateTime(Request.Form["endDate"])
+         );
+
+        if (r.isReserved)
+        {
+            <p>Sorry, that region is already reserved. Please choose a different time.</p>
+        } else {
+            <p>Your reservation has been made!</p>
+        }
     }
-    
+
     int lastPlanetId = 0;
 }
 
 
 
 <form method="POST" action="Reserve.cshtml" name="register">
-    <input type="hidden" name="planetId" value="1"/>
-    <select>
+    <input type="hidden" name="clientId" value="1"/>
+    <select name="regionId">
         @foreach (var row in regions)
         {
             if (row.PlanetId != lastPlanetId)
@@ -34,11 +40,11 @@
                 lastPlanetId = row.PlanetId;
                 <optgroup label="@row.Name"></optgroup>
             }
-            <option>Region @row.Id --- $@row.Price</option>
+            <option value="@row.Id">Region @row.Id --- $@row.Price</option>
         }
     </select>
-    <input type="date" name="startDate" id="startDate"/>
-    <input type="date" name="endDate"/>
+    <input type="date" name="startDate" required=""/>
+    <input type="date" name="endDate" required=""/>
 
     <input type="submit" />
 </form>
