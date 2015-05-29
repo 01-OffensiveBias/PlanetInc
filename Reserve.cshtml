@@ -1,35 +1,31 @@
-﻿@using System.Data
-@using System.Data.SqlClient
-
-@{
+﻿@{
     Page.Title = "Title goes here";
     Layout = "_Layout.cshtml";
 
     var db = Database.Open("IISServer");
-    string queryString = "SELECT r.Id, r.Terrain, r.Price, r.PlanetId, p.Name FROM Regions AS r JOIN Planets AS p ON r.PlanetId = p.Id";
+    var queryString = "SELECT r.Id, r.Terrain, r.Price, r.PlanetId, p.Name FROM Regions AS r JOIN Planets AS p ON r.PlanetId = p.Id";
     var regions = db.Query(queryString);
 
-    int lastPlanetId = 0;
+    var lastPlanetId = 0;
 }
-
-<br />
+<br/>
 <div class="col-lg-6">
 
     @if (!Request.Form.ToString().IsEmpty())
     {
-    Reservation r = new Reservation(1,
-    Convert.ToInt32(Request.Form["regionId"]),
-    Convert.ToDateTime(Request.Form["startDate"]),
-    Convert.ToDateTime(Request.Form["endDate"])
-    );
+        var r = new Reservation(1,
+            Convert.ToInt32(Request.Form["regionId"]),
+            Convert.ToDateTime(Request.Form["startDate"]),
+            Convert.ToDateTime(Request.Form["endDate"])
+            );
 
-    if (!r.message.IsEmpty())
-    {
-    <div class="alert alert-dismissible @(r.error ? "alert-danger" : "alert-success")">
-        <button type="button" class="close" data-dismiss="alert">×</button>
-        @r.message
-    </div>
-    }
+        if (!r.message.IsEmpty())
+        {
+            <div class="alert alert-dismissible @(r.error ? "alert-danger" : "alert-success")">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                @r.message
+            </div>
+        }
     }
 
     <div class="well bs-component">
@@ -48,7 +44,7 @@
                                     lastPlanetId = row.PlanetId;
                                     <optgroup label="@row.Name"></optgroup>
                                 }
-                                <option value="@row.Id">Region @row.Id --- $@row.Price</option>
+                                <option value="@row.Id">Region @row.Id --- $@row.Price.ToString("#.00")</option>
                             }
                         </select>
                     </div>
