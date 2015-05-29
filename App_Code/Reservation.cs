@@ -30,11 +30,16 @@ public class Reservation
 
         connection.Open();
 
-        if (!validate()) {
+        if (!validate())
+        {
             message = "Start date must occur before end date";
-        } else if (!checkIfReserved()) {
+        }
+        else if (!checkIfReserved())
+        {
             message = "Sorry, that region is already reserved. Please choose a different time.";
-        } else {
+        }
+        else
+        {
             message = "Your reservation has been made!";
             error = false;
             reserve();
@@ -50,15 +55,15 @@ public class Reservation
 
     private void reserve()
     {
-        SqlCommand cmd = new SqlCommand(null, connection);
+        var cmd = new SqlCommand(null, connection);
 
         cmd.CommandText = "INSERT INTO Reservations (ClientId, RegionId, StartDate, EndDate) " +
-            "VALUES (@client, @region, @start, @end);";
+                          "VALUES (@client, @region, @start, @end);";
 
-        SqlParameter clientParameter = new SqlParameter("@client", SqlDbType.Int);
-        SqlParameter regionParameter = new SqlParameter("@region", SqlDbType.Int);
-        SqlParameter startParam = new SqlParameter("@start", SqlDbType.Date);
-        SqlParameter endParam = new SqlParameter("@end", SqlDbType.Date);
+        var clientParameter = new SqlParameter("@client", SqlDbType.Int);
+        var regionParameter = new SqlParameter("@region", SqlDbType.Int);
+        var startParam = new SqlParameter("@start", SqlDbType.Date);
+        var endParam = new SqlParameter("@end", SqlDbType.Date);
         clientParameter.Value = clientId;
         regionParameter.Value = regionId;
         startParam.Value = startDate;
@@ -74,18 +79,18 @@ public class Reservation
 
     private Boolean checkIfReserved()
     {
-        SqlCommand cmd = new SqlCommand(null, connection);
+        var cmd = new SqlCommand(null, connection);
 
         cmd.CommandText = "SELECT COUNT(*) " +
-            "FROM Reservations " +
-            "WHERE RegionId = @region AND (" +
-            "@start <= EndDate OR " +
-            "@end >= StartDate OR " +
-            "@start = StartDate AND @end = EndDate);";
+                          "FROM Reservations " +
+                          "WHERE RegionId = @region AND (" +
+                          "@start <= EndDate OR " +
+                          "@end >= StartDate OR " +
+                          "@start = StartDate AND @end = EndDate);";
 
-        SqlParameter regionParameter = new SqlParameter("@region", SqlDbType.Int);
-        SqlParameter startParam = new SqlParameter("@start", SqlDbType.Date);
-        SqlParameter endParam = new SqlParameter("@end", SqlDbType.Date);
+        var regionParameter = new SqlParameter("@region", SqlDbType.Int);
+        var startParam = new SqlParameter("@start", SqlDbType.Date);
+        var endParam = new SqlParameter("@end", SqlDbType.Date);
         regionParameter.Value = regionId;
         startParam.Value = startDate;
         endParam.Value = endDate;
