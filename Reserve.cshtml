@@ -4,6 +4,7 @@
 
     var db = Database.Open("IISServer");
     var queryString = "SELECT r.Id, r.Terrain, r.Price, r.PlanetId, p.Name FROM Regions AS r JOIN Planets AS p ON r.PlanetId = p.Id";
+
     var regions = db.Query(queryString);
 
     var lastPlanetId = 0;

@@ -1,4 +1,4 @@
-﻿@{
-  // Database Connection
-  App.Db = Database.Open("IISServer");
+@{
+  // Global Variables
+  WebSecurity.InitializeDatabaseConnection("UsersDatabase", "Users", "Id", "Username", autoCreateTables: true);
 }
