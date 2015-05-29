@@ -9,71 +9,70 @@
     string queryString = "SELECT r.Id, r.Terrain, r.Price, r.PlanetId, p.Name FROM Regions AS r JOIN Planets AS p ON r.PlanetId = p.Id";
     var regions = db.Query(queryString);
 
-    if (!Request.Form.ToString().IsEmpty())
-    {
-        Reservation r = new Reservation(1,
-             Convert.ToInt32(Request.Form["regionId"]),
-             Convert.ToDateTime(Request.Form["startDate"]),
-             Convert.ToDateTime(Request.Form["endDate"])
-         );
-
-        if (r.isReserved)
-        {
-            <p>Sorry, that region is already reserved. Please choose a different time.</p>
-        }
-        else
-        {
-            <p>Your reservation has been made!</p>
-        }
-    }
-
     int lastPlanetId = 0;
 }
 
 <br />
 <div class="col-lg-6">
-<div class="well bs-component">
-    <form method="POST" action="Reserve.cshtml" name="register" class="form-horizontal">
-        <fieldset>
 
-            <legend>Make a Reservation</legend>
-            <input type="hidden" name="clientId" value="1"/>
-            <div class="form-group">
-                <label for="inputPassword" class="col-lg-2 control-label">Region: </label>
-                <div class="col-lg-10">
-                    <select class="form-control" name="regionId">
-                        @foreach (var row in regions)
-                        {
-                            if (row.PlanetId != lastPlanetId)
+    @if (!Request.Form.ToString().IsEmpty())
+    {
+    Reservation r = new Reservation(1,
+    Convert.ToInt32(Request.Form["regionId"]),
+    Convert.ToDateTime(Request.Form["startDate"]),
+    Convert.ToDateTime(Request.Form["endDate"])
+    );
+
+    if (!r.message.IsEmpty())
+    {
+    <div class="alert alert-dismissible @(r.error ? "alert-danger" : "alert-success")">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+        @r.message
+    </div>
+    }
+    }
+
+    <div class="well bs-component">
+        <form method="POST" action="Reserve.cshtml" name="register" class="form-horizontal">
+            <fieldset>
+                <legend>Make a Reservation</legend>
+                <input type="hidden" name="clientId" value="1"/>
+                <div class="form-group">
+                    <label for="inputPassword" class="col-lg-2 control-label">Region: </label>
+                    <div class="col-lg-10">
+                        <select class="form-control" name="regionId">
+                            @foreach (var row in regions)
                             {
-                                lastPlanetId = row.PlanetId;
-                                <optgroup label="@row.Name"></optgroup>
+                                if (row.PlanetId != lastPlanetId)
+                                {
+                                    lastPlanetId = row.PlanetId;
+                                    <optgroup label="@row.Name"></optgroup>
+                                }
+                                <option value="@row.Id">Region @row.Id --- $@row.Price</option>
                             }
-                            <option value="@row.Id">Region @row.Id --- $@row.Price</option>
-                        }
-                    </select>
+                        </select>
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-group">
-                <label for="" class="col-lg-2 control-label">Start Date</label>
-                <div class="col-lg-10">
-                    <input class="form-control" type="date" name="startDate" required="" />
+                <div class="form-group">
+                    <label for="" class="col-lg-2 control-label">Start Date</label>
+                    <div class="col-lg-10">
+                        <input class="form-control" type="date" name="startDate" required=""/>
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-group">
-                <label for="" class="col-lg-2 control-label">End Date</label>
-                <div class="col-lg-10">
-                    <input class="form-control" type="date" name="endDate" required="" />
+                <div class="form-group">
+                    <label for="" class="col-lg-2 control-label">End Date</label>
+                    <div class="col-lg-10">
+                        <input class="form-control" type="date" name="endDate" required=""/>
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <div class="col-lg-10 col-lg-offset-2">
-                    <input class="form-control btn-info" type="submit"/>
+                <div class="form-group">
+                    <div class="col-lg-10 col-lg-offset-2">
+                        <input class="form-control btn-info" type="submit"/>
+                    </div>
                 </div>
-            </div>
-        </fieldset>
-    </form>
-</div>
+            </fieldset>
+        </form>
+    </div>
 </div>

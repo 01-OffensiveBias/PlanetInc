@@ -18,7 +18,8 @@ public class Reservation
     private DateTime endDate;
 
     SqlConnection connection = new SqlConnection("Server=IISProject.mtchs.org;Database=PlanetInc;Trusted_Connection=Yes");
-    public Boolean isReserved;
+    public string message;
+    public Boolean error = true;
 
     public Reservation(int clientId, int regionId, DateTime startDate, DateTime endDate)
     {
@@ -28,14 +29,23 @@ public class Reservation
         this.endDate = endDate;
 
         connection.Open();
-        isReserved = checkIfReserved();
 
-        if (!isReserved)
-        {
+        if (!validate()) {
+            message = "Start date must occur before end date";
+        } else if (!checkIfReserved()) {
+            message = "Sorry, that region is already reserved. Please choose a different time.";
+        } else {
+            message = "Your reservation has been made!";
+            error = false;
             reserve();
         }
 
         connection.Close();
+    }
+
+    private Boolean validate()
+    {
+        return startDate <= endDate;
     }
 
     private void reserve()
