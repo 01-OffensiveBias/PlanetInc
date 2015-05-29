@@ -45,7 +45,7 @@ else
 
 @if (IsPost)
 {
-  if (Request.Form["logout"] == null && Validation.IsValid())
+  if (Request.Form["logout"] == null)
   {
     string username = Request.Form["username"];
     string password = Request.Form["password"];
