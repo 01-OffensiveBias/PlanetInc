@@ -16,10 +16,14 @@
 
 <a href="Reserve.cshtml">Reserve a planet here...</a>
 
+@{
+  
+}
+
 @if (WebSecurity.IsAuthenticated)
 {
   // Data for logged in user
-  <form method="POST">
+  <form class="form-horizontal" method="POST">
     <h3>Logout</h3>
     <fieldset>
       <input id="submit" name="logout" type="submit" value="Logout" />
@@ -28,17 +32,29 @@
 }
 else
 {
-  <form method="POST">
-    <h3>Login</h3>
+  <form class="form-horizontal" method="POST">
     @Html.ValidationSummary()
     <fieldset>
-      <label for="email">Email: </label>
-      <input id="email" name="username" type="email" value="@Request["username"]" required />
+      <legend>Login</legend>
+      <div class="form-group">
+        <label for="email" class="col-md-2 control-label">Email</label>
+        <div class="col-md-10">
+          <input id="email" class="form-control" name="username" type="email" value="@Request["username"]" required />
+        </div>
+      </div>
 
-      <label for="password">Password: </label>
-      <input id="password" name="password" type="password" value="@Request["password"]" required />
+      <div class="form-group">
+        <label for="password" class="col-md-2 control-label">Password: </label>
+        <div class="col-md-10">
+          <input id="password" class="form-control" name="password" type="password" value="@Request["password"]" required />
+        </div>
+      </div>
 
-      <input id="submit" type="submit" value="Submit" />
+      <div class="form-group">
+        <div class="col-md-10 col-md-offset-2">
+          <input id="submit" type="submit" value="Submit" />
+        </div>
+      </div>
     </fieldset>
   </form>
 }
@@ -50,17 +66,10 @@ else
     string username = Request.Form["username"];
     string password = Request.Form["password"];
 
-    if (WebSecurity.UserExists(username))
+    if (WebSecurity.UserExists(username) && WebSecurity.Login(username, password, persistCookie: true))
     {
-      if (WebSecurity.Login(username, password, persistCookie: true))
-      {
-        // Alert the user of login success
-        Response.Redirect("/");
-      }
-      else
-      {
-        Validation.AddFormError("Invalid Login Information");
-      }
+      // Alert the user of login success
+      Response.Redirect("/");
     }
     else
     {
