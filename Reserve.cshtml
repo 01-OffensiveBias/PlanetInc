@@ -5,7 +5,7 @@
     Page.Title = "Title goes here";
     Layout = "_Layout.cshtml";
 
-    var db = Database.Open("IISServer");
+    var db = Database.Open("PlanetInc");
     string queryString = "SELECT r.Id, r.Terrain, r.Price, r.PlanetId, p.Name FROM Regions AS r JOIN Planets AS p ON r.PlanetId = p.Id";
     var regions = db.Query(queryString);
 

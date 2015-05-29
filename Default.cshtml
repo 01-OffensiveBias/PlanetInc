@@ -45,7 +45,7 @@ else
 
 @if (IsPost)
 {
-  if (Request.Form["logout"] == null)
+  if (Request.Form["logout"] == null && Validation.IsValid())
   {
     string username = Request.Form["username"];
     string password = Request.Form["password"];
@@ -70,6 +70,7 @@ else
   else if (WebSecurity.IsAuthenticated)
   {
     WebSecurity.Logout();
+    Response.Redirect("/");
   }
 }
 
@@ -80,7 +81,7 @@ else
   @*Test Query Values*@
   <table>
     <tbody>
-    @foreach (var row in db.Query(queryString))
+    @foreach (dynamic row in db.Query(queryString))
     {
       <tr>
         <td>@row.Id</td>
