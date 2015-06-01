@@ -14,45 +14,50 @@
   Validation.RequireField("password", "You must enter your password");
 }
 
-<a href="Reserve.cshtml">Reserve a planet here...</a>
 
 <div class="col-md-6">
+  <div class="well bs-component">
+    @if (WebSecurity.IsAuthenticated)
+    {
+      // Data for logged in user
+      <form class="form-horizontal" method="POST">
+        <fieldset>
+          <input id="submit" name="logout" class="form-control btn btn-primary" type="submit" value="Logout"/>
+        </fieldset>
+      </form>
+    }
+    else
+    {
+      <form class="form-horizontal" method="POST">
+        @Html.ValidationSummary()
+        <fieldset>
+          <legend>Login</legend>
+          <div class="form-group">
+            <label for="email" class="col-lg-2 control-label">Email </label>
+            <div class="col-lg-10">
+              <input id="email" class="form-control" name="username" type="email" value="@Request["username"]" required/>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="password" class="col-lg-2 control-label">Password </label>
+            <div class="col-lg-10">
+              <input id="password" class="form-control" name="password" type="password" value="@Request["password"]" required/>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="col-lg-10 col-lg-offset-2">
+              <input id="submit" class="form-control btn btn-primary" type="submit" value="Submit"/>
+            </div>
+          </div>
+        </fieldset>
+      </form>
+    }
+  </div>
   @if (WebSecurity.IsAuthenticated)
   {
-    // Data for logged in user
-    <form class="form-horizontal" method="POST">
-      <fieldset>
-        <input id="submit" name="logout" class="btn btn-primary" type="submit" value="Logout" />
-      </fieldset>
-    </form>
-  }
-  else
-  {
-    <form class="form-horizontal" method="POST">
-      @Html.ValidationSummary()
-      <fieldset>
-        <legend>Login</legend>
-        <div class="form-group">
-          <label for="email" class="col-lg-2 control-label">Email</label>
-          <div class="col-lg-10">
-            <input id="email" class="form-control" name="username" type="email" value="@Request["username"]" required />
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="password" class="col-lg-2 control-label">Password: </label>
-          <div class="col-lg-10">
-            <input id="password" class="form-control" name="password" type="password" value="@Request["password"]" required />
-          </div>
-        </div>
-
-        <div class="form-group">
-          <div class="col-lg-10 col-lg-offset-2">
-            <input id="submit" class="btn btn-primary" type="submit" value="Submit" />
-          </div>
-        </div>
-      </fieldset>
-    </form>
+    <a href="Reserve.cshtml">Reserve a planet here...</a>
   }
 </div>
 

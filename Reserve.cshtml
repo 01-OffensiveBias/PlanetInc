@@ -2,6 +2,12 @@
     Page.Title = "PlanetInc | Reservations";
     Layout = "_Layout.cshtml";
 
+  if (!WebSecurity.IsAuthenticated)
+  {
+    Response.StatusCode = (int) HttpStatusCode.Forbidden;
+    Response.End();
+  }
+
     var db = Database.Open("PlanetInc");
     var regions = db.Query("SELECT r.Id, r.Terrain, r.Price, r.PlanetId, p.Name " +
                            "FROM Regions AS r " +
@@ -40,7 +46,7 @@
                 <input type="hidden" name="clientId" value="1"/>
 
                 <div class="form-group">
-                    <label for="regionId" class="col-lg-2 control-label">Region: </label>
+                    <label for="regionId" class="col-lg-2 control-label">Region </label>
                     <div class="col-lg-10">
                         <select class="form-control" name="regionId" id="regionId">
                             @foreach (var row in regions)
@@ -59,20 +65,20 @@
                 <div class="form-group">
                     <label for="startDate" class="col-lg-2 control-label">Start Date</label>
                     <div class="col-lg-10">
-                        <input class="form-control" type="date" name="startDate" id="startDate" required=""/>
+                        <input class="form-control" type="date" name="startDate" id="startDate" value="@Request.Form["startDate"]" required=""/>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label for="endDate" class="col-lg-2 control-label">End Date</label>
                     <div class="col-lg-10">
-                        <input class="form-control" type="date" name="endDate" id="endDate" required=""/>
+                        <input class="form-control" type="date" name="endDate" id="endDate" value="@Request.Form["endDate"]" required=""/>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <div class="col-lg-10 col-lg-offset-2">
-                        <input class="form-control btn-primary" type="submit"/>
+                        <input class="form-control btn btn-primary" type="submit"/>
                     </div>
                 </div>
             </fieldset>
