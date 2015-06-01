@@ -4,6 +4,12 @@
     Page.Title = "Title goes here";
     Layout = "_Layout.cshtml";
 
+    if (!WebSecurity.IsAuthenticated)
+    {
+        Response.StatusCode = (int) HttpStatusCode.Forbidden;
+        Response.End();
+    }
+
     // Open Database Connection
     Database db = Database.Open("PlanetInc");
 
