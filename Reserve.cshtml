@@ -26,7 +26,7 @@
             Convert.ToInt32(Request.Form["regionId"]),
             Convert.ToDateTime(Request.Form["startDate"]),
             Convert.ToDateTime(Request.Form["endDate"])
-        );
+            );
 
         if (!reservation.message.IsEmpty())
         {
@@ -85,3 +85,5 @@
         </form>
     </div>
 </div>
+
+<a href="Reservations.cshtml">View current reservations...</a>
