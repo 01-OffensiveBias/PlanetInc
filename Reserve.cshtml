@@ -1,30 +1,32 @@
 ﻿@{
-    Page.Title = "Title goes here";
+    Page.Title = "PlanetInc | Reservations";
     Layout = "_Layout.cshtml";
 
-
-    var db = Database.Open("IISServer");
-    var queryString = "SELECT r.Id, r.Terrain, r.Price, r.PlanetId, p.Name FROM Regions AS r JOIN Planets AS p ON r.PlanetId = p.Id";
-    var regions = db.Query(queryString);
-
+    var db = Database.Open("PlanetInc");
+    var regions = db.Query("SELECT r.Id, r.Terrain, r.Price, r.PlanetId, p.Name " +
+                           "FROM Regions AS r " +
+                           "JOIN Planets AS p ON r.PlanetId = p.Id");
+    db.Close();
+                           
     var lastPlanetId = 0;
 }
+
 <br/>
 <div class="col-lg-6">
 
     @if (!Request.Form.ToString().IsEmpty())
     {
-        var r = new Reservation(1,
+        var reservation = new Reservation(1,
             Convert.ToInt32(Request.Form["regionId"]),
             Convert.ToDateTime(Request.Form["startDate"]),
             Convert.ToDateTime(Request.Form["endDate"])
-            );
+        );
 
-        if (!r.message.IsEmpty())
+        if (!reservation.message.IsEmpty())
         {
-            <div class="alert alert-dismissible @(r.error ? "alert-danger" : "alert-success")">
+            <div class="alert alert-dismissible @(reservation.error ? "alert-danger" : "alert-success")">
                 <button type="button" class="close" data-dismiss="alert">×</button>
-                @r.message
+                @reservation.message
             </div>
         }
     }
@@ -33,11 +35,14 @@
         <form method="POST" action="Reserve.cshtml" name="register" class="form-horizontal">
             <fieldset>
                 <legend>Make a Reservation</legend>
+
+                <!-- TODO: remove, get clientID server-side -->
                 <input type="hidden" name="clientId" value="1"/>
+
                 <div class="form-group">
-                    <label for="inputPassword" class="col-lg-2 control-label">Region: </label>
+                    <label for="regionId" class="col-lg-2 control-label">Region: </label>
                     <div class="col-lg-10">
-                        <select class="form-control" name="regionId">
+                        <select class="form-control" name="regionId" id="regionId">
                             @foreach (var row in regions)
                             {
                                 if (row.PlanetId != lastPlanetId)
@@ -45,23 +50,23 @@
                                     lastPlanetId = row.PlanetId;
                                     <optgroup label="@row.Name"></optgroup>
                                 }
-                                <option value="@row.Id">Region @row.Id --- $@row.Price.ToString("#.00")</option>
+                                <option value="@row.Id">Region @row.Id --- $@row.Price</option>
                             }
                         </select>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="" class="col-lg-2 control-label">Start Date</label>
+                    <label for="startDate" class="col-lg-2 control-label">Start Date</label>
                     <div class="col-lg-10">
-                        <input class="form-control" type="date" name="startDate" required=""/>
+                        <input class="form-control" type="date" name="startDate" id="startDate" required=""/>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="" class="col-lg-2 control-label">End Date</label>
+                    <label for="endDate" class="col-lg-2 control-label">End Date</label>
                     <div class="col-lg-10">
-                        <input class="form-control" type="date" name="endDate" required=""/>
+                        <input class="form-control" type="date" name="endDate" id="endDate" required=""/>
                     </div>
                 </div>
 

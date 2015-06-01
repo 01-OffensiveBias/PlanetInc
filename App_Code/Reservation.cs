@@ -1,15 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Web;
-using System.Web.Script.Serialization;
-using WebMatrix.Data;
 
-/// <summary>
-/// Summary description for Reservation
-/// </summary>
 public class Reservation
 {
     private int clientId;
@@ -17,7 +9,9 @@ public class Reservation
     private DateTime startDate;
     private DateTime endDate;
 
-    SqlConnection connection = new SqlConnection("Server=IISProject.mtchs.org;Database=PlanetInc;Trusted_Connection=Yes");
+    private SqlConnection connection =
+        new SqlConnection("Server=IISProject.mtchs.org;Database=PlanetInc;Trusted_Connection=Yes");
+
     public string message;
     public Boolean error = true;
 
@@ -30,30 +24,30 @@ public class Reservation
 
         connection.Open();
 
-        if (!validate())
+        if (!IsValid())
         {
             message = "Start date must occur before end date";
         }
-        else if (!checkIfReserved())
+        else if (!IsReserved())
         {
             message = "Sorry, that region is already reserved. Please choose a different time.";
         }
         else
         {
+            Reserve();
             message = "Your reservation has been made!";
             error = false;
-            reserve();
         }
 
         connection.Close();
     }
 
-    private Boolean validate()
+    private Boolean IsValid()
     {
         return startDate <= endDate;
     }
 
-    private void reserve()
+    private void Reserve()
     {
         var cmd = new SqlCommand(null, connection);
 
@@ -77,7 +71,7 @@ public class Reservation
         cmd.ExecuteNonQuery();
     }
 
-    private Boolean checkIfReserved()
+    private Boolean IsReserved()
     {
         var cmd = new SqlCommand(null, connection);
 
