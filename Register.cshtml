@@ -1,0 +1,22 @@
+﻿@using System.Data
+@using System.Data.SqlClient
+
+@{
+    Page.Title = "Title goes here";
+    Layout = "_Layout.cshtml";
+
+    RegisterUser newUser = new RegisterUser(Request.Form["name"]);
+}
+
+@{
+    if (newUser.isRegistered)
+    {
+        <p>Thanks, you have been registered @Request.Form["name"]</p>
+    }
+}
+
+@Request.Form["name"]}
+
+<form method="POST" action="Register.cshtml">
+    <input type="text" name="name" value="" />
+</form>

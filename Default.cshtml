@@ -1,4 +1,4 @@
-﻿@using System.Data.SqlClient
+﻿﻿@using System.Data.SqlClient
 @{
   Page.Title = "Title goes here";
   Layout = "_Layout.cshtml";
@@ -13,6 +13,8 @@
   Validation.RequireField("email", "You must enter your email");
   Validation.RequireField("password", "You must enter your password");
 }
+
+<a href="Reserve.cshtml">Reserve a planet here...</a>
 
 @if (WebSecurity.IsAuthenticated)
 {
@@ -68,6 +70,7 @@ else
   else if (WebSecurity.IsAuthenticated)
   {
     WebSecurity.Logout();
+    Response.Redirect("/");
   }
 }
 
@@ -78,7 +81,7 @@ else
   @*Test Query Values*@
   <table>
     <tbody>
-    @foreach (var row in db.Query(queryString))
+    @foreach (dynamic row in db.Query(queryString))
     {
       <tr>
         <td>@row.Id</td>
