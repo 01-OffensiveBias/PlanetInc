@@ -1,15 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Web;
-using System.Web.Script.Serialization;
-using WebMatrix.Data;
 
-/// <summary>
-/// Summary description for Reservation
-/// </summary>
 public class Reservation
 {
     private int clientId;
@@ -17,7 +9,9 @@ public class Reservation
     private DateTime startDate;
     private DateTime endDate;
 
-    SqlConnection connection = new SqlConnection("Server=IISProject.mtchs.org;Database=PlanetInc;Trusted_Connection=Yes");
+    private SqlConnection connection =
+        new SqlConnection("Server=IISProject.mtchs.org;Database=PlanetInc;Trusted_Connection=Yes");
+
     public string message;
     public Boolean error = true;
 
@@ -30,35 +24,40 @@ public class Reservation
 
         connection.Open();
 
-        if (!validate()) {
+        if (!IsValid())
+        {
             message = "Start date must occur before end date";
-        } else if (!checkIfReserved()) {
+        }
+        else if (!IsReserved())
+        {
             message = "Sorry, that region is already reserved. Please choose a different time.";
-        } else {
+        }
+        else
+        {
+            Reserve();
             message = "Your reservation has been made!";
             error = false;
-            reserve();
         }
 
         connection.Close();
     }
 
-    private Boolean validate()
+    private Boolean IsValid()
     {
         return startDate <= endDate;
     }
 
-    private void reserve()
+    private void Reserve()
     {
-        SqlCommand cmd = new SqlCommand(null, connection);
+        var cmd = new SqlCommand(null, connection);
 
         cmd.CommandText = "INSERT INTO Reservations (ClientId, RegionId, StartDate, EndDate) " +
-            "VALUES (@client, @region, @start, @end);";
+                          "VALUES (@client, @region, @start, @end);";
 
-        SqlParameter clientParameter = new SqlParameter("@client", SqlDbType.Int);
-        SqlParameter regionParameter = new SqlParameter("@region", SqlDbType.Int);
-        SqlParameter startParam = new SqlParameter("@start", SqlDbType.Date);
-        SqlParameter endParam = new SqlParameter("@end", SqlDbType.Date);
+        var clientParameter = new SqlParameter("@client", SqlDbType.Int);
+        var regionParameter = new SqlParameter("@region", SqlDbType.Int);
+        var startParam = new SqlParameter("@start", SqlDbType.Date);
+        var endParam = new SqlParameter("@end", SqlDbType.Date);
         clientParameter.Value = clientId;
         regionParameter.Value = regionId;
         startParam.Value = startDate;
@@ -72,20 +71,20 @@ public class Reservation
         cmd.ExecuteNonQuery();
     }
 
-    private Boolean checkIfReserved()
+    private Boolean IsReserved()
     {
-        SqlCommand cmd = new SqlCommand(null, connection);
+        var cmd = new SqlCommand(null, connection);
 
         cmd.CommandText = "SELECT COUNT(*) " +
-            "FROM Reservations " +
-            "WHERE RegionId = @region AND (" +
-            "@start <= EndDate OR " +
-            "@end >= StartDate OR " +
-            "@start = StartDate AND @end = EndDate);";
+                          "FROM Reservations " +
+                          "WHERE RegionId = @region AND (" +
+                          "@start <= EndDate OR " +
+                          "@end >= StartDate OR " +
+                          "@start = StartDate AND @end = EndDate);";
 
-        SqlParameter regionParameter = new SqlParameter("@region", SqlDbType.Int);
-        SqlParameter startParam = new SqlParameter("@start", SqlDbType.Date);
-        SqlParameter endParam = new SqlParameter("@end", SqlDbType.Date);
+        var regionParameter = new SqlParameter("@region", SqlDbType.Int);
+        var startParam = new SqlParameter("@start", SqlDbType.Date);
+        var endParam = new SqlParameter("@end", SqlDbType.Date);
         regionParameter.Value = regionId;
         startParam.Value = startDate;
         endParam.Value = endDate;
